@@ -38,7 +38,7 @@ class SlideshowHandler {
   }
 
   processPosts(posts) {
-    let processed = [];
+    const processed = [];
 
     for (let i = 0; i < posts.length; i += 1) {
       const p = posts[i];
@@ -46,6 +46,9 @@ class SlideshowHandler {
       if (p.is_self) continue;
 
       console.log('post', p);
+
+      const mediaInfo = this.getMediaInfo(p.data.url);
+      if (!mediaInfo) continue;
 
       const postInfo = {
         title: p.data.title,
@@ -55,13 +58,12 @@ class SlideshowHandler {
         createdUtc: p.data.created_utc,
         nsfw: p.data.over_18,
         pinned: p.data.pinned,
-        mediaInfo: this.getMediaInfo(p.data.url),
+        mediaUrl: mediaInfo.url,
+        mediaExtension: mediaInfo.extension,
       };
 
       processed.push(postInfo);
     }
-
-    processed = processed.filter((p) => p.mediaInfo !== null);
 
     return processed;
   }
@@ -89,6 +91,15 @@ class SlideshowHandler {
       return this.slides[this.currentIndex];
     } else {
       console.warn('Todo: load more');
+    }
+  }
+
+  getPrevSlide() {
+    if (this.currentIndex == 0) {
+      return this.slides[this.currentIndex];
+    } else {
+      this.currentIndex -= 1;
+      return this.slides[this.currentIndex];
     }
   }
 }

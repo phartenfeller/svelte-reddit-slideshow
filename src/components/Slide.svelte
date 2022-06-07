@@ -1,10 +1,6 @@
 <script>
-  export let slide;
-
-  console.log('slide', slide);
-
-  const { mediaInfo } = slide;
-  const { url, extension } = mediaInfo;
+  export let mediaUrl;
+  export let mediaExtension;
 
   const muted = false;
 
@@ -14,20 +10,20 @@
 </script>
 
 <div>
-  {#if extension === '.gifv'}
+  {#if mediaExtension === '.gifv'}
     <video id="slide" autoPlay loop {muted} onPlaying={endedHandler}>
-      <source src={url.replace('.gifv', '.mp4')} type="video/mp4" />
+      <source src={mediaUrl.replace('.gifv', '.mp4')} type="video/mp4" />
     </video>
-  {:else if ['.mp4', '.webm'].includes(extension)}
+  {:else if ['.mp4', '.webm'].includes(mediaExtension)}
     <video id="slide" autoPlay loop {muted} onPlaying={endedHandler}>
-      <source src={url.replace('.mp4', '.webm')} type="video/webm" />
-      <source src={url} type="video/mp4" />
+      <source src={mediaUrl.replace('.mp4', '.webm')} type="video/webm" />
+      <source src={mediaUrl} type="video/mp4" />
     </video>
   {:else}
     <div
       id="slide"
       class="image-frame"
-      style="background-image: url('{url}')"
+      style="background-image: url('{mediaUrl}')"
     />
   {/if}
 </div>
