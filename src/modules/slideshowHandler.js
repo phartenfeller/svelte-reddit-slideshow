@@ -45,15 +45,17 @@ class SlideshowHandler {
       // selfposts are only with text -> skip
       if (p.is_self) continue;
 
+      console.log('post', p);
+
       const postInfo = {
-        title: p.title,
-        url: p.url,
-        permalink: p.permalink,
-        score: p.score,
-        createdUtc: p.created_utc,
-        nsfw: p.over_18,
-        pinned: p.pinned,
-        mediaInfo: getMediaInfo(p.url),
+        title: p.data.title,
+        url: p.data.url,
+        permalink: p.data.permalink,
+        score: p.data.score,
+        createdUtc: p.data.created_utc,
+        nsfw: p.data.over_18,
+        pinned: p.data.pinned,
+        mediaInfo: this.getMediaInfo(p.data.url),
       };
 
       processed.push(postInfo);
@@ -69,20 +71,20 @@ class SlideshowHandler {
     const mediaUrl = postUrl.replace('http://', 'https://');
     const domain = mediaUrl.match(/:\/\/(.+)\//)[1];
 
-    const match = url.match(extPattern);
+    const match = mediaUrl.match(extPattern);
     const fileExt = match ? match[0] : null;
 
     if (domain === 'gfycat.com' || supportedExtensions.includes(fileExt)) {
-      return { url, extension: fileExt };
+      return { url: mediaUrl, extension: fileExt };
     } else if (domain === 'imgur.com') {
-      return { url: url + '.jpg', extension: fileExt };
+      return { url: mediaUrl + '.jpg', extension: fileExt };
     }
 
     return null;
   }
 
   getNextSlide() {
-    if (this.currentIndex >= this.slides.length) {
+    if (this.currentIndex <= this.slides.length) {
       this.currentIndex += 1;
       return this.slides[this.currentIndex];
     } else {

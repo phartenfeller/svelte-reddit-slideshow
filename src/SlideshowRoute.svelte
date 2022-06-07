@@ -15,9 +15,11 @@
 </script>
 
 <div>
-  Subreddit: {$slideshowStore.subreddit}
+  <div class="absolute top-0 left-0">
+    Subreddit: {$slideshowStore.subreddit}
+  </div>
   {#if renderSlide}
-    <Slide slide={$currentSlide} />
+    <Slide slide={currentSlide} />
   {:else}
     <div>Loading...</div>
   {/if}
