@@ -7,6 +7,7 @@
 
   const clickHandler = (e) => {
     console.log({ subreddit });
+    location.search = `?subreddit=${subreddit}`;
     slideshowStore.set({ subreddit });
     routeStore.set(ROUTES.slideshow);
   };

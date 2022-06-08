@@ -3,10 +3,21 @@
   import ROUTES from './constants/routes';
   import HomeRoute from './HomeRoute.svelte';
   import SlideshowRoute from './SlideshowRoute.svelte';
+  import { onMount } from 'svelte';
+  import slideshowStore from './stores/slideshowStore';
 
   let route;
   routeStore.subscribe((value) => {
     route = value;
+  });
+
+  onMount(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const qSub = queryParams.get('subreddit');
+    if (qSub) {
+      slideshowStore.set({ subreddit: qSub });
+      routeStore.set(ROUTES.slideshow);
+    }
   });
 </script>
 
