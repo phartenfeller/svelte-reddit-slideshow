@@ -16,6 +16,12 @@ const supportedExtensions = [
   '.webm',
 ];
 
+async function fetchApi(url) {
+  const response = await fetch(url, options);
+  const jsonResponse = await response.json();
+  return jsonResponse;
+}
+
 class SlideshowHandler {
   constructor(subreddit) {
     this.subreddit = subreddit;
@@ -26,11 +32,9 @@ class SlideshowHandler {
 
   async initData() {
     const url = `https://www.reddit.com/r/${this.subreddit}.json`;
-    const response = await fetch(url, options);
-    const jsonResponse = await response.json();
-    console.log('jsonResponse', jsonResponse);
+    const response = await fetchApi(url);
 
-    const { data } = jsonResponse;
+    const { data } = response;
 
     this.after = data.after;
     this.slides = this.processPosts(data.children);
@@ -40,15 +44,20 @@ class SlideshowHandler {
   processPosts(posts) {
     const processed = [];
 
+    console.groupCollapsed('Dismissed Posts');
     for (let i = 0; i < posts.length; i += 1) {
       const p = posts[i];
       // selfposts are only with text -> skip
-      if (p.is_self) continue;
-
-      console.log('post', p);
+      if (p.is_self) {
+        console.log('Skipping selfpost', p);
+        continue;
+      }
 
       const mediaInfo = this.getMediaInfo(p.data.url);
-      if (!mediaInfo) continue;
+      if (!mediaInfo) {
+        console.log('Skipping no matching media info', p);
+        continue;
+      }
 
       const postInfo = {
         title: p.data.title,
@@ -64,6 +73,7 @@ class SlideshowHandler {
 
       processed.push(postInfo);
     }
+    console.groupEnd();
 
     return processed;
   }
@@ -85,9 +95,32 @@ class SlideshowHandler {
     return null;
   }
 
+  async fetchMore() {
+    console.log(
+      `Fetching more... current: ${this.currentIndex} - loaded ${this.slides.length}`
+    );
+    const url = `https://www.reddit.com/r/${this.subreddit}.json?after=${this.after}`;
+    const response = await fetchApi(url);
+
+    const { data } = response;
+
+    this.after = data.after;
+    const newSlides = this.processPosts(data.children);
+    this.slides.push(...newSlides);
+  }
+
   getNextSlide() {
+    if (this.currentIndex >= this.slides.length - 4) {
+      this.fetchMore();
+    }
+
     if (this.currentIndex <= this.slides.length) {
       this.currentIndex += 1;
+
+      if (!this.slides[this.currentIndex]) {
+        console.warn('No more slides', this.currentIndex, this.slides);
+      }
+
       return this.slides[this.currentIndex];
     } else {
       console.warn('Todo: load more');
