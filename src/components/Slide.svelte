@@ -1,6 +1,9 @@
 <script>
+  import { beforeUpdate, afterUpdate } from 'svelte';
+
   export let mediaUrl;
   export let mediaExtension;
+  export let nextSlide;
 
   console.log({ mediaUrl, mediaExtension });
 
@@ -13,6 +16,29 @@
   const endedHandler = () => {
     console.log('endedHandler');
   };
+
+  let timeout;
+
+  beforeUpdate(() => {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+  });
+
+  afterUpdate(() => {
+    let timeoutMs;
+
+    if (['.mp4', '.webm', '.gifv', '.gif', 'iframe'].includes(mediaExtension)) {
+      timeoutMs = 15 * 1000;
+    } else {
+      timeoutMs = 5 * 1000;
+    }
+
+    console.log('setting timeout');
+    timeout = setTimeout(() => {
+      nextSlide();
+    }, timeoutMs);
+  });
 </script>
 
 <div>
