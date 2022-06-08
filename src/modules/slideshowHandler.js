@@ -53,7 +53,10 @@ class SlideshowHandler {
         continue;
       }
 
-      const mediaInfo = this.getMediaInfo(p.data.url);
+      const mediaInfo = this.getMediaInfo(
+        p.data.url,
+        p.data.secure_media_embed
+      );
       if (!mediaInfo) {
         console.log('Skipping no matching media info', p);
         continue;
@@ -78,7 +81,7 @@ class SlideshowHandler {
     return processed;
   }
 
-  getMediaInfo(postUrl) {
+  getMediaInfo(postUrl, embed) {
     // stolen from https://github.com/ismaelpadilla/reddit-slideshow
     const mediaUrl = postUrl.replace('http://', 'https://');
     const domain = mediaUrl.match(/:\/\/(.+)\//)[1];
@@ -90,6 +93,11 @@ class SlideshowHandler {
       return { url: mediaUrl, extension: fileExt };
     } else if (domain === 'imgur.com') {
       return { url: mediaUrl + '.jpg', extension: fileExt };
+    } else if (embed.content) {
+      const url = embed.content.match(/src="([^"]+)"/)[1];
+      if (!url) return null;
+      console.log('Found embed', url, 'from', embed.content);
+      return { url, extension: 'iframe' };
     }
 
     return null;

@@ -4,6 +4,10 @@
 
   console.log({ mediaUrl, mediaExtension });
 
+  if (mediaExtension === 'iframe') {
+    console.log('loading iframe');
+  }
+
   const muted = false;
 
   const endedHandler = () => {
@@ -35,6 +39,8 @@
       <source src={mediaUrl.replace('.mp4', '.webm')} type="video/webm" />
       <source src={mediaUrl} type="video/mp4" />
     </video>
+  {:else if mediaExtension === 'iframe'}
+    <iframe class="video-frame" src={mediaUrl} title="iframe" />
   {:else}
     <div
       id="slide"
