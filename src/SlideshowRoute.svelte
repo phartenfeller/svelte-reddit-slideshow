@@ -42,7 +42,7 @@
 
   <button
     type="button"
-    class="absolute left-0 ml-1 p-3 hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 rounded-lg"
+    class="absolute left-0 ml-1 p-3 hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 rounded-lg z-40"
     style="margin-top: 50vh;
   margin-bottom: 50vh;"
     on:click={prevSlide}
@@ -62,7 +62,7 @@
 
   <button
     type="button"
-    class="absolute right-0 mr-1 p-3 hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 rounded-lg"
+    class="absolute right-0 mr-1 p-3 hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 rounded-lg z-40"
     style="margin-top: 50vh;
   margin-bottom: 50vh;"
     on:click={nextSlide}

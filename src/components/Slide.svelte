@@ -5,8 +5,6 @@
   export let mediaExtension;
   export let nextSlide;
 
-  console.log({ mediaUrl, mediaExtension });
-
   if (mediaExtension === 'iframe') {
     console.log('loading iframe');
   }
@@ -26,6 +24,7 @@
   });
 
   afterUpdate(() => {
+    console.log({ mediaUrl, mediaExtension });
     let timeoutMs;
 
     if (['.mp4', '.webm', '.gifv', '.gif', 'iframe'].includes(mediaExtension)) {

@@ -4,11 +4,12 @@
   import ROUTES from './constants/routes';
 
   let subreddit;
+  let feed = 'hot';
 
   const clickHandler = (e) => {
-    console.log({ subreddit });
+    console.log({ subreddit, feed });
     location.search = `?subreddit=${subreddit}`;
-    slideshowStore.set({ subreddit });
+    slideshowStore.set({ subreddit, feed });
     routeStore.set(ROUTES.slideshow);
   };
 </script>
@@ -42,6 +43,83 @@
           />
         </div>
       </div>
+    </div>
+    <div class="mt-6">
+      <label for="reddit-feed" class="text-xl font-medium text-gray-200"
+        >Feed</label
+      >
+
+      <fieldset id="reddit-feed" class="mt-4">
+        <legend class="sr-only">Reddit Feed</legend>
+        <div
+          class="space-y-4 sm:flex items-center sm:space-y-0 sm:space-x-10 mx-auto"
+        >
+          <div class="flex items-center">
+            <input
+              id="rf-hot"
+              name="reddit-feed-option"
+              type="radio"
+              group={feed}
+              checked
+              class="focus:ring-amber-200 ring-offset-slate-900 h-4 w-4 text-amber-300 border-slate-800 bg-slate-700"
+            />
+            <label
+              for="rf-hot"
+              class="ml-3 block text-sm font-medium text-gray-400"
+            >
+              Hot
+            </label>
+          </div>
+
+          <div class="flex items-center">
+            <input
+              id="rf-top"
+              name="reddit-feed-option"
+              type="radio"
+              group={feed}
+              class="focus:ring-amber-200 ring-offset-slate-900 h-4 w-4 text-amber-300 border-slate-800 bg-slate-700"
+            />
+            <label
+              for="rf-top"
+              class="ml-3 block text-sm font-medium text-gray-400"
+            >
+              Top
+            </label>
+          </div>
+
+          <div class="flex items-center">
+            <input
+              id="rf-new"
+              name="reddit-feed-option"
+              type="radio"
+              group={feed}
+              class="focus:ring-amber-200 ring-offset-slate-900 h-4 w-4 text-amber-300 border-slate-800 bg-slate-700"
+            />
+            <label
+              for="rf-new"
+              class="ml-3 block text-sm font-medium text-gray-400"
+            >
+              New
+            </label>
+          </div>
+
+          <div class="flex items-center">
+            <input
+              id="rf-rising"
+              name="reddit-feed-option"
+              type="radio"
+              group={feed}
+              class="focus:ring-amber-200 ring-offset-slate-900 h-4 w-4 text-amber-300 border-slate-800 bg-slate-700"
+            />
+            <label
+              for="rf-rising"
+              class="ml-3 block text-sm font-medium text-gray-400"
+            >
+              Rising
+            </label>
+          </div>
+        </div>
+      </fieldset>
     </div>
     <button
       on:click={clickHandler}

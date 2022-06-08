@@ -37,11 +37,11 @@ class SlideshowHandler {
     const { data } = response;
 
     this.after = data.after;
-    this.slides = this.processPosts(data.children);
+    this.slides = await this.processPosts(data.children);
     this.currentIndex = -1;
   }
 
-  processPosts(posts) {
+  async processPosts(posts) {
     const processed = [];
 
     console.groupCollapsed('Dismissed Posts');
@@ -53,7 +53,7 @@ class SlideshowHandler {
         continue;
       }
 
-      const mediaInfo = this.getMediaInfo(
+      const mediaInfo = await this.getMediaInfo(
         p.data.url,
         p.data.secure_media_embed
       );
@@ -81,7 +81,7 @@ class SlideshowHandler {
     return processed;
   }
 
-  getMediaInfo(postUrl, embed) {
+  async getMediaInfo(postUrl, embed) {
     // stolen from https://github.com/ismaelpadilla/reddit-slideshow
     const mediaUrl = postUrl.replace('http://', 'https://');
     const domain = mediaUrl.match(/:\/\/(.+)\//)[1];
@@ -89,10 +89,18 @@ class SlideshowHandler {
     const match = mediaUrl.match(extPattern);
     const fileExt = match ? match[0] : null;
 
-    if (domain === 'gfycat.com' || supportedExtensions.includes(fileExt)) {
+    if (supportedExtensions.includes(fileExt)) {
       return { url: mediaUrl, extension: fileExt };
     } else if (domain === 'imgur.com') {
       return { url: mediaUrl + '.jpg', extension: fileExt };
+    } else if (domain === 'gfycat.com') {
+      console.log('Found gfycat', mediaUrl);
+      const gfyId = postUrl.match(/([.0-9a-zA-Z]+)(-|$)/)[1];
+      const response = await fetchApi(
+        `https://api.gfycat.com/v1/gfycats/${gfyId}`
+      );
+      console.log('ersp', response.gfyItem);
+      return { url: response.gfyItem.mp4Url, extension: '.mp4' };
     } else if (embed.content) {
       const url = embed.content.match(/src="([^"]+)"/)[1];
       if (!url) return null;
@@ -113,7 +121,7 @@ class SlideshowHandler {
     const { data } = response;
 
     this.after = data.after;
-    const newSlides = this.processPosts(data.children);
+    const newSlides = await this.processPosts(data.children);
     this.slides.push(...newSlides);
   }
 
