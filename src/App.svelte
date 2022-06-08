@@ -15,9 +15,14 @@
     const queryParams = new URLSearchParams(window.location.search);
     const qSub = queryParams.get('subreddit');
     const qFeed = queryParams.get('feed');
-    console.log({ qSub, qFeed });
+    const qTime = queryParams.get('time');
+    console.log({ qSub, qFeed, qTime });
     if (qSub) {
-      slideshowStore.set({ subreddit: qSub, feed: qFeed ?? 'hot' });
+      slideshowStore.set({
+        subreddit: qSub,
+        feed: qFeed ?? 'hot',
+        time: qTime ?? null,
+      });
       routeStore.set(ROUTES.slideshow);
     }
   });

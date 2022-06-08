@@ -23,18 +23,33 @@ async function fetchApi(url) {
 }
 
 class SlideshowHandler {
-  constructor(subreddit, feed = 'hot') {
+  constructor(subreddit, feed = 'hot', time = null) {
     console.log('SlideshowHandler', subreddit, feed);
     this.subreddit = subreddit;
     this.feed = feed;
+    this.time = time;
     this.slides = [];
     this.after = null;
     this.currentIndex = null;
   }
 
   getRedditUrl() {
+    const searchParams = new URLSearchParams();
+
+    searchParams.set('limit', 25);
+
+    if (this.after) {
+      searchParams.set('after', this.after);
+    }
+
+    if (this.feed === 'top' && this.time) {
+      searchParams.set('t', this.time);
+    }
+
+    const sp = searchParams.toString();
+
     return `https://www.reddit.com/r/${this.subreddit}/${this.feed}.json${
-      this.after ? `?after=${this.after}` : ''
+      sp ? `?${sp}` : ''
     }`;
   }
 

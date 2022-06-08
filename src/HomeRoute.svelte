@@ -8,12 +8,21 @@
   let time = 'day';
 
   const feedOptions = ['hot', 'best', 'top', 'new'];
-  const timeOptions = ['hour', 'day', 'week', 'month', 'year', 'alltime'];
+  const timeOptions = ['hour', 'day', 'week', 'month', 'year', 'all'];
 
   const clickHandler = (e) => {
-    console.log({ subreddit, feed });
-    location.search = `?subreddit=${subreddit}&feed=${feed}`;
-    slideshowStore.set({ subreddit, feed });
+    console.log({ subreddit, feed, time });
+    let sTime = null;
+
+    const searchParams = new URLSearchParams();
+    searchParams.set('subreddit', subreddit);
+    searchParams.set('feed', feed);
+    if (feed === 'top' && time) {
+      sTime = time;
+      searchParams.set('time', time);
+    }
+    location.search = searchParams.toString();
+    slideshowStore.set({ subreddit, feed, time: sTime });
     routeStore.set(ROUTES.slideshow);
   };
 </script>

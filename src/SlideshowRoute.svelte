@@ -6,7 +6,8 @@
 
   const slideshow = new SlideshowHandler(
     $slideshowStore.subreddit,
-    $slideshowStore.feed
+    $slideshowStore.feed,
+    $slideshowStore.time
   );
 
   let renderSlide = false;
