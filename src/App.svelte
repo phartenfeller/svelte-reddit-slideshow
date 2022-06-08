@@ -14,8 +14,10 @@
   onMount(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const qSub = queryParams.get('subreddit');
+    const qFeed = queryParams.get('feed');
+    console.log({ qSub, qFeed });
     if (qSub) {
-      slideshowStore.set({ subreddit: qSub });
+      slideshowStore.set({ subreddit: qSub, feed: qFeed ?? 'hot' });
       routeStore.set(ROUTES.slideshow);
     }
   });

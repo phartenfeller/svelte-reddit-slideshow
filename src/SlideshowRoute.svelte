@@ -4,7 +4,10 @@
   import SlideshowHandler from './modules/slideshowHandler';
   import Slide from './components/Slide.svelte';
 
-  const slideshow = new SlideshowHandler($slideshowStore.subreddit);
+  const slideshow = new SlideshowHandler(
+    $slideshowStore.subreddit,
+    $slideshowStore.feed
+  );
 
   let renderSlide = false;
   let currentSlide = null;

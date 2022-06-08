@@ -23,15 +23,23 @@ async function fetchApi(url) {
 }
 
 class SlideshowHandler {
-  constructor(subreddit) {
+  constructor(subreddit, feed = 'hot') {
+    console.log('SlideshowHandler', subreddit, feed);
     this.subreddit = subreddit;
+    this.feed = feed;
     this.slides = [];
     this.after = null;
     this.currentIndex = null;
   }
 
+  getRedditUrl() {
+    return `https://www.reddit.com/r/${this.subreddit}/${this.feed}.json${
+      this.after ? `?after=${this.after}` : ''
+    }`;
+  }
+
   async initData() {
-    const url = `https://www.reddit.com/r/${this.subreddit}.json`;
+    const url = this.getRedditUrl();
     const response = await fetchApi(url);
 
     const { data } = response;
@@ -115,7 +123,7 @@ class SlideshowHandler {
     console.log(
       `Fetching more... current: ${this.currentIndex} - loaded ${this.slides.length}`
     );
-    const url = `https://www.reddit.com/r/${this.subreddit}.json?after=${this.after}`;
+    const url = this.getRedditUrl();
     const response = await fetchApi(url);
 
     const { data } = response;

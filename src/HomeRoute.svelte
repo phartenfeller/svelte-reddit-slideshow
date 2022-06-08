@@ -5,10 +5,14 @@
 
   let subreddit;
   let feed = 'hot';
+  let time = 'day';
+
+  const feedOptions = ['hot', 'best', 'top', 'new'];
+  const timeOptions = ['hour', 'day', 'week', 'month', 'year', 'alltime'];
 
   const clickHandler = (e) => {
     console.log({ subreddit, feed });
-    location.search = `?subreddit=${subreddit}`;
+    location.search = `?subreddit=${subreddit}&feed=${feed}`;
     slideshowStore.set({ subreddit, feed });
     routeStore.set(ROUTES.slideshow);
   };
@@ -54,73 +58,62 @@
         <div
           class="space-y-4 sm:flex items-center sm:space-y-0 sm:space-x-10 mx-auto"
         >
-          <div class="flex items-center">
-            <input
-              id="rf-hot"
-              name="reddit-feed-option"
-              type="radio"
-              group={feed}
-              checked
-              class="focus:ring-amber-200 ring-offset-slate-900 h-4 w-4 text-amber-300 border-slate-800 bg-slate-700"
-            />
-            <label
-              for="rf-hot"
-              class="ml-3 block text-sm font-medium text-gray-400"
-            >
-              Hot
-            </label>
-          </div>
-
-          <div class="flex items-center">
-            <input
-              id="rf-top"
-              name="reddit-feed-option"
-              type="radio"
-              group={feed}
-              class="focus:ring-amber-200 ring-offset-slate-900 h-4 w-4 text-amber-300 border-slate-800 bg-slate-700"
-            />
-            <label
-              for="rf-top"
-              class="ml-3 block text-sm font-medium text-gray-400"
-            >
-              Top
-            </label>
-          </div>
-
-          <div class="flex items-center">
-            <input
-              id="rf-new"
-              name="reddit-feed-option"
-              type="radio"
-              group={feed}
-              class="focus:ring-amber-200 ring-offset-slate-900 h-4 w-4 text-amber-300 border-slate-800 bg-slate-700"
-            />
-            <label
-              for="rf-new"
-              class="ml-3 block text-sm font-medium text-gray-400"
-            >
-              New
-            </label>
-          </div>
-
-          <div class="flex items-center">
-            <input
-              id="rf-rising"
-              name="reddit-feed-option"
-              type="radio"
-              group={feed}
-              class="focus:ring-amber-200 ring-offset-slate-900 h-4 w-4 text-amber-300 border-slate-800 bg-slate-700"
-            />
-            <label
-              for="rf-rising"
-              class="ml-3 block text-sm font-medium text-gray-400"
-            >
-              Rising
-            </label>
-          </div>
+          {#each feedOptions as fo}
+            <div class="flex items-center">
+              <input
+                value={fo}
+                id="rf-{fo}"
+                name="reddit-feed-option"
+                type="radio"
+                bind:group={feed}
+                checked={fo === feed}
+                class="focus:ring-amber-200 ring-offset-slate-900 h-4 w-4 text-amber-300 border-slate-800 bg-slate-700"
+              />
+              <label
+                for="rf-{fo}"
+                class="ml-3 block text-sm font-medium text-gray-400 capitalize"
+              >
+                {fo}
+              </label>
+            </div>
+          {/each}
         </div>
       </fieldset>
     </div>
+
+    <div class="mt-6 {feed === 'top' ? 'visible' : 'hidden'}">
+      <label for="reddit-time" class="text-xl font-medium text-gray-200"
+        >Time</label
+      >
+
+      <fieldset id="reddit-time" class="mt-4">
+        <legend class="sr-only">Reddit Feed</legend>
+        <div
+          class="space-y-4 sm:flex items-center sm:space-y-0 sm:space-x-10 mx-auto"
+        >
+          {#each timeOptions as to}
+            <div class="flex items-center">
+              <input
+                value={to}
+                id="rt-{to}"
+                name="reddit-time-option"
+                type="radio"
+                bind:group={time}
+                checked={to === time}
+                class="focus:ring-amber-200 ring-offset-slate-900 h-4 w-4 text-amber-300 border-slate-800 bg-slate-700"
+              />
+              <label
+                for="rf-{to}"
+                class="ml-3 block text-sm font-medium text-gray-400 capitalize"
+              >
+                {to}
+              </label>
+            </div>
+          {/each}
+        </div>
+      </fieldset>
+    </div>
+
     <button
       on:click={clickHandler}
       type="button"
