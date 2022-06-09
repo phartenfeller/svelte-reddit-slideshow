@@ -119,11 +119,17 @@ class SlideshowHandler {
     } else if (domain === 'gfycat.com') {
       console.log('Found gfycat', mediaUrl);
       const gfyId = postUrl.match(/([.0-9a-zA-Z]+)(-|$)/)[1];
-      const response = await fetchApi(
-        `https://api.gfycat.com/v1/gfycats/${gfyId}`
-      );
-      console.log('ersp', response.gfyItem);
-      return { url: response.gfyItem.mp4Url, extension: '.mp4' };
+
+      try {
+        const response = await fetchApi(
+          `https://api.gfycat.com/v1/gfycats/${gfyId}`
+        );
+        console.log('ersp', response.gfyItem);
+        return { url: response.gfyItem.mp4Url, extension: '.mp4' };
+      } catch (e) {
+        console.error('Error fetching gfycat', e);
+        return null;
+      }
     } else if (embed.content) {
       const url = embed.content.match(/src="([^"]+)"/)[1];
       if (!url) return null;
